@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter, Poppins } from "next/font/google";
 import "../styles/globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,10 +21,14 @@ export const metadata: Metadata = {
     "CityScope helps residents explore civic data, compare cities, and make smarter choices."
 };
 
-const Layout = ({ children }: { children: ReactNode }) => (
-  <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-    <body className="min-h-screen bg-slate-50 antialiased">{children}</body>
-  </html>
-);
-
-export default Layout;
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+      <body className="min-h-screen bg-slate-50 antialiased">
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
+    </html>
+  );
+}

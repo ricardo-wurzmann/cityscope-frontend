@@ -11,10 +11,36 @@ CityScope Frontend is a Next.js web application that helps residents explore and
 ## Project Structure
 
 ```
-app/               # Next.js app router pages
-components/        # Shared UI components
-lib/               # API helpers, auth utilities, schema definitions
-styles/            # Global styles
+cityscope-frontend/
+├── app/                    # Next.js app router pages
+│   ├── (auth)/             # Auth route group (doesn't affect URL)
+│   │   ├── login/
+│   │   │   └── page.tsx    # Login page
+│   │   └── signup/          # Signup directory (empty)
+│   ├── dashboard/
+│   │   └── page.tsx        # Dashboard page
+│   ├── layout.tsx           # Root layout
+│   └── page.tsx            # Home page
+├── components/              # Shared UI components
+│   ├── forms/
+│   │   └── LoginForm.tsx   # Login form component
+│   ├── Charts.tsx          # Charts component (Recharts)
+│   └── CitySelect.tsx      # City selector component
+├── lib/                    # Utilities and helpers
+│   ├── api.ts              # Axios instance & API functions
+│   ├── auth.ts             # Authentication functions
+│   ├── queryClient.ts      # TanStack Query client
+│   └── zod-schemas.ts      # Zod validation schemas
+├── styles/                  # Global styles
+│   └── globals.css          # Global CSS & Tailwind imports
+├── .gitignore              # Git ignore rules
+├── next-env.d.ts           # Next.js TypeScript definitions
+├── package.json            # Dependencies & scripts
+├── package-lock.json       # Locked dependency versions
+├── postcss.config.js       # PostCSS configuration
+├── tailwind.config.ts      # Tailwind CSS configuration
+├── tsconfig.json           # TypeScript configuration
+└── README.md               # This file
 ```
 
 ## Tech Stack

@@ -1,48 +1,55 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import { authService } from "@/services/authService";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/auth";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { setAccessToken } = useAuth();
   const router = useRouter();
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoading(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+
     try {
-      await login(email, password);
+      const data = await authService.login(email, password);
+      setAccessToken(data.access_token);
       router.push("/dashboard");
-    } finally {
-      setLoading(false);
+    } catch (err: any) {
+      setError(err.response?.data?.detail || "Login failed");
     }
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-3 max-w-sm">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      {error && <p className="text-red-500">{error}</p>}
+
       <input
-        className="w-full rounded border p-2"
-        placeholder="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
+        type="email"
+        placeholder="Email"
+        className="border p-2 rounded"
+        onChange={(e) => setEmail(e.target.value)}
       />
+
       <input
-        className="w-full rounded border p-2"
         type="password"
-        placeholder="password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
+        placeholder="Password"
+        className="border p-2 rounded"
+        onChange={(e) => setPassword(e.target.value)}
       />
+
       <button
-        disabled={loading}
-        className="rounded bg-black px-4 py-2 text-white"
+        type="submit"
+        className="bg-blue-600 text-white p-2 rounded"
       >
-        {loading ? "..." : "Login"}
+        Login
       </button>
     </form>
   );
 }
-

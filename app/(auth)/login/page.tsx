@@ -1,10 +1,12 @@
+"use client";
+
 import LoginForm from "@/components/forms/LoginForm";
 
-export default function Page() {
+export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <div className="p-6 max-w-sm mx-auto">
+      <h1 className="text-xl font-bold mb-4">Login</h1>
       <LoginForm />
-    </main>
+    </div>
   );
 }
-
