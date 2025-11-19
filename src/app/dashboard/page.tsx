@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import ProtectedRoute from "../../src/components/ProtectedRoute";
-import CitySelect from "../../src/components/CitySelect";
-import IndicatorsView from "../../src/components/IndicatorsView";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import CitySelect from "../../components/CitySelect";
+import IndicatorsView from "../../components/IndicatorsView";
 import { authService } from "@/services/authService";
 
 export default function DashboardPage() {
@@ -81,3 +81,4 @@ export default function DashboardPage() {
     </ProtectedRoute>
   );
 }
+

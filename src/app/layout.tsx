@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter, Poppins } from "next/font/google";
-import "../styles/globals.css";
+import "../../styles/globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-import { QueryProvider } from "../src/providers/QueryProvider";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,3 +35,4 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   );
 }
+
