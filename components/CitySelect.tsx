@@ -1,70 +1,53 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { getCities } from "@/lib/services/cityService";
 import { City } from "@/lib/zod-schemas";
+import { useSelectedCity } from "@/store/selectedCity";
 
-type CitySelectProps = {
-  onSelect: (cityId: number) => void;
-};
+export default function CitySelect() {
+  const { cityId, setCity } = useSelectedCity();
 
-const STATES = [
-  "AC",
-  "AL",
-  "AM",
-  "AP",
-  "BA",
-  "CE",
-  "DF",
-  "ES",
-  "GO",
-  "MA",
-  "MG",
-  "MS",
-  "MT",
-  "PA",
-  "PB",
-  "PE",
-  "PI",
-  "PR",
-  "RJ",
-  "RN",
-  "RO",
-  "RR",
-  "RS",
-  "SC",
-  "SE",
-  "SP",
-  "TO"
-];
+  const { data: cities = [], isLoading, error } = useQuery({
+    queryKey: ["cities"],
+    queryFn: getCities,
+  });
 
-export default function CitySelect({ onSelect }: CitySelectProps) {
-  const [uf, setUf] = useState("SP");
-  const [cities, setCities] = useState<City[]>([]);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const id = Number(e.target.value);
+    if (id) {
+      setCity(id);
+    }
+  };
 
-  useEffect(() => {
-    api.get(`/cities?uf=${uf}`).then((response) => setCities(response.data));
-  }, [uf]);
+  if (isLoading) {
+    return (
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <p className="text-sm text-slate-500">Loading cities...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 shadow-sm">
+        <p className="text-sm text-rose-600">Error loading cities. Please try again.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex gap-2">
+    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <label className="mb-2 block text-sm font-medium text-slate-700">
+        Select City
+      </label>
       <select
-        value={uf}
-        onChange={(event) => setUf(event.target.value)}
-        className="rounded border p-2"
+        value={cityId || ""}
+        onChange={handleChange}
+        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
       >
-        {STATES.map((state) => (
-          <option key={state} value={state}>
-            {state}
-          </option>
-        ))}
-      </select>
-      <select
-        onChange={(event) => onSelect(Number(event.target.value))}
-        className="rounded border p-2"
-      >
-        <option>Selecione a cidade</option>
-        {cities.map((city) => (
+        <option value="">Select a city</option>
+        {cities.map((city: City) => (
           <option key={city.id} value={city.id}>
             {city.name}
           </option>
