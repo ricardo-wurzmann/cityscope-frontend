@@ -6,6 +6,7 @@ import { getUserEmailFromToken } from "@/lib/utils/jwt";
 import CitySelect from "@/components/CitySelect";
 import IndicatorsView from "@/components/IndicatorsView";
 import LogoutButton from "@/components/LogoutButton";
+import { api } from "@/lib/api";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -26,6 +27,15 @@ export default function DashboardPage() {
             <div className="text-right">
               <p className="text-sm font-medium text-slate-900">{userEmail}</p>
             </div>
+            <button
+              className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
+              onClick={async () => {
+                const res = await api.get("/cities/debug/token");
+                console.log("DEBUG:", res.data);
+              }}
+            >
+              Test Token
+            </button>
             <LogoutButton />
           </div>
         </div>
@@ -36,6 +46,11 @@ export default function DashboardPage() {
         <div className="space-y-6">
           <CitySelect />
           <IndicatorsView />
+          
+          {/* Map Placeholder */}
+          <div className="mt-6 rounded-lg border border-slate-200 bg-gray-100 p-8 text-center shadow-sm">
+            <p className="text-gray-500">Interactive map coming soon...</p>
+          </div>
         </div>
       </main>
     </div>

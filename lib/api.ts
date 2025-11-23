@@ -9,6 +9,17 @@ export const api = axios.create({
   withCredentials: true
 });
 
+// Request interceptor to add Authorization header from localStorage
+api.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 let isRefreshing = false;
 let pendingResolvers: Array<() => void> = [];
 
@@ -40,6 +51,9 @@ api.interceptors.response.use(
         const accessToken = refreshResponse.data.access_token;
         if (accessToken) {
           api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+          if (typeof window !== "undefined") {
+            localStorage.setItem("accessToken", accessToken);
+          }
         }
         onRefreshed();
         originalRequest._retry = true;

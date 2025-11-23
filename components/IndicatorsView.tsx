@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getIndicatorsByCity } from "@/lib/services/indicatorService";
+import { getIndicators } from "@/lib/services/indicatorService";
 import { useSelectedCity } from "@/store/selectedCity";
 import { IndicatorRow } from "@/lib/zod-schemas";
 
@@ -14,14 +14,14 @@ export default function IndicatorsView() {
     error,
   } = useQuery({
     queryKey: ["indicators", cityId],
-    queryFn: () => getIndicatorsByCity(cityId!),
+    queryFn: () => getIndicators(cityId!),
     enabled: !!cityId,
   });
 
   if (!cityId) {
     return (
       <div className="rounded-lg border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <p className="text-slate-500">Select a city to view indicators</p>
+        <p className="text-slate-500">Select a city</p>
       </div>
     );
   }
@@ -64,7 +64,10 @@ export default function IndicatorsView() {
           <thead className="bg-slate-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-700">
-                Name
+                Indicator
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-700">
+                Year
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-700">
                 Value
@@ -72,25 +75,22 @@ export default function IndicatorsView() {
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-700">
                 Unit
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-700">
-                Year
-              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200 bg-white">
             {indicators.map((indicator: IndicatorRow, index: number) => (
               <tr key={`${indicator.indicator}-${indicator.year}-${index}`} className="hover:bg-slate-50">
                 <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-900">
-                  {indicator.name}
+                  {indicator.indicator}
+                </td>
+                <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                  {indicator.year}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
                   {indicator.value}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                   {indicator.unit || "-"}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
-                  {indicator.year}
                 </td>
               </tr>
             ))}

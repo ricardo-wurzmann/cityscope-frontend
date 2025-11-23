@@ -8,10 +8,13 @@ import { useSelectedCity } from "@/store/selectedCity";
 export default function CitySelect() {
   const { cityId, setCity } = useSelectedCity();
 
-  const { data: cities = [], isLoading, error } = useQuery({
-    queryKey: ["cities"],
-    queryFn: getCities,
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["cities", 1],
+    queryFn: () => getCities(1, 50),
   });
+
+  // Handle different response formats (array or paginated object)
+  const cities: City[] = Array.isArray(data) ? data : data?.data || data?.items || [];
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = Number(e.target.value);
@@ -23,7 +26,10 @@ export default function CitySelect() {
   if (isLoading) {
     return (
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <p className="text-sm text-slate-500">Loading cities...</p>
+        <div className="animate-pulse space-y-2">
+          <div className="h-4 w-24 rounded bg-slate-200"></div>
+          <div className="h-10 w-full rounded bg-slate-100"></div>
+        </div>
       </div>
     );
   }
@@ -44,7 +50,7 @@ export default function CitySelect() {
       <select
         value={cityId || ""}
         onChange={handleChange}
-        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
       >
         <option value="">Select a city</option>
         {cities.map((city: City) => (

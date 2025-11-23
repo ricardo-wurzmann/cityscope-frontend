@@ -19,6 +19,7 @@ export default function LoginForm() {
 
     try {
       const data = await authService.login(email, password);
+      localStorage.setItem("accessToken", data.access_token);
       setAccessToken(data.access_token);
       router.push("/dashboard");
     } catch (err: any) {
