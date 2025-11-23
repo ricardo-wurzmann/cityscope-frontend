@@ -59,6 +59,11 @@ api.interceptors.response.use(
         originalRequest._retry = true;
         return api(originalRequest);
       } catch (refreshError) {
+        // If refresh fails, clear token and redirect to login
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("accessToken");
+          window.location.href = "/login";
+        }
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
